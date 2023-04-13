@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.resource.ResponseAmount;
 import com.example.service.AccountService;
 
 @RestController
@@ -48,8 +49,15 @@ public class AccountController {
 	/*対象口座の取得                  */
 	/*--------------------------------*/
 	@GetMapping("bankTrading/{account_id}")
-	public Account accountGet(@PathVariable Integer accountId) {
-		return this.accountService.getAmount(accountId);
+	public Integer accountGet(@PathVariable("account_id") Integer accountId) {
+
+		//ResponseAmountインスタンスにセット
+		ResponseAmount responseAmount = new ResponseAmount();
+		responseAmount.setAmount(this.accountService.getAmount(accountId).getAmount());
+
+		return responseAmount.getAmount();
+
+		//return this.accountService.getAmount(accountId);
 	}
 
 
