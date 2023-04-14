@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.entity.Account;
 import com.example.repository.AccountRepository;
+import com.example.resource.RequestAmount;
 
 @Service
 public class AccountService {
@@ -53,6 +54,19 @@ public class AccountService {
 
 		return account;
 
+	}
+
+	/*--------------------------------*/
+	/*預け入れ(入金)                  */
+	/*--------------------------------*/
+	public Account deposit(Integer accountId, RequestAmount requestAmount) {
+
+		Account account = new Account();
+
+		account.setAmount(this.getAmount(accountId).getAmount() + requestAmount.getAmount());
+
+
+		return this.accountRepository.save(account);
 	}
 
 

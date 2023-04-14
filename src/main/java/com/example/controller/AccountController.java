@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.resource.RequestAmount;
 import com.example.resource.ResponseAmount;
 import com.example.service.AccountService;
 
@@ -49,15 +51,30 @@ public class AccountController {
 	/*対象口座の取得                  */
 	/*--------------------------------*/
 	@GetMapping("bankTrading/{account_id}")
-	public Integer accountGet(@PathVariable("account_id") Integer accountId) {
+	public ResponseAmount accountGet(@PathVariable("account_id") Integer accountId) {
 
 		//ResponseAmountインスタンスにセット
 		ResponseAmount responseAmount = new ResponseAmount();
 		responseAmount.setAmount(this.accountService.getAmount(accountId).getAmount());
 
-		return responseAmount.getAmount();
+		return responseAmount;
 
 		//return this.accountService.getAmount(accountId);
+	}
+
+	/*--------------------------------*/
+	/*預け入れ(入金)                  */
+	/*--------------------------------*/
+	@PostMapping("bankTrading/deposit/{account_id}")
+	public ResponseAmount depositprocedure(@PathVariable("account_id") Integer accountId, @RequestParam("depo") RequestAmount requestAmount)
+	{
+
+		this.accountService.deposit(accountId, requestAmount);
+
+		ResponseAmount responseAmount =  new ResponseAmount();
+		responseAmount.setAmount(this.accountService.getAmount(accountId).getAmount() + requestAmount.getAmount());
+
+		return responseAmount;
 	}
 
 
