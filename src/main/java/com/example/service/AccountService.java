@@ -61,10 +61,23 @@ public class AccountService {
 	/*--------------------------------*/
 	public Account deposit(Integer accountId, RequestAmount requestAmount) {
 
-		Account account = new Account();
+		Account account = this.getAmount(accountId);
 
 		account.setAmount(this.getAmount(accountId).getAmount() + requestAmount.getAmount());
 
+		return this.accountRepository.save(account);
+	}
+
+	/*--------------------------------*/
+	/*引き出し(出金)                  */
+	/*--------------------------------*/
+	public Account withdraw(Integer accountId, RequestAmount requestAmount) {
+		Account account = this.getAmount(accountId);
+
+		if(this.getAmount(accountId).getAmount() >= requestAmount.getAmount()) {
+			account.setAmount(this.getAmount(accountId).getAmount() - requestAmount.getAmount());
+
+		}
 
 		return this.accountRepository.save(account);
 	}

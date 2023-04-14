@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
@@ -66,13 +66,28 @@ public class AccountController {
 	/*預け入れ(入金)                  */
 	/*--------------------------------*/
 	@PostMapping("bankTrading/deposit/{account_id}")
-	public ResponseAmount depositprocedure(@PathVariable("account_id") Integer accountId, @RequestParam("depo") RequestAmount requestAmount)
+	public ResponseAmount depositprocedure(@PathVariable("account_id") Integer accountId, @RequestBody RequestAmount requestAmount)
 	{
 
 		this.accountService.deposit(accountId, requestAmount);
 
 		ResponseAmount responseAmount =  new ResponseAmount();
-		responseAmount.setAmount(this.accountService.getAmount(accountId).getAmount() + requestAmount.getAmount());
+		responseAmount.setAmount(this.accountService.getAmount(accountId).getAmount());
+
+		return responseAmount;
+	}
+
+	/*--------------------------------*/
+	/*引き出し(出金)                  */
+	/*--------------------------------*/
+	@PostMapping("bankTrading/withdraw/{account_id}")
+	public ResponseAmount draw(@PathVariable("account_id") Integer accountId, @RequestBody RequestAmount requestAmount) {
+
+		this.accountService.withdraw(accountId, requestAmount);
+
+
+		ResponseAmount responseAmount =  new ResponseAmount();
+		responseAmount.setAmount(this.accountService.getAmount(accountId).getAmount());
 
 		return responseAmount;
 	}
